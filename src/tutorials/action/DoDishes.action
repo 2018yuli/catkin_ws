@@ -1,0 +1,8 @@
+# define the goal
+uint32 dishwasher_id # which washer I want to use
+---
+# define the result
+uint32 total_dishes_cleaned
+---
+# define a feedback message
+float32 percent_complate

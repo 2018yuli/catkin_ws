@@ -1,0 +1,10 @@
+<library path="talker_listener_nodelet">
+    <class type="talker_nodelet.TalkerNodelet"
+           base_class_type="nodelet::Nodelet"
+           name="talker_nodelet"
+           description="A simple talker nodelet"/>
+    <class type="listener_nodelet.ListenerNodelet"
+           base_class_type="nodelet::Nodelet"
+           name="listener_nodelet"
+           description="A simple listener nodelet"/>
+</library>

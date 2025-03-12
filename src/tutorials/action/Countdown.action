@@ -1,0 +1,5 @@
+int32 start_num
+---
+string result_msg
+---
+int32 current_num
