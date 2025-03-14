@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
   actionlib
   actionlib_msgs
+  turtlesim
 )
 
 ## System dependencies are found with CMake's conventions
@@ -169,6 +170,11 @@ catkin_install_python(PROGRAMS
   scripts/count_action_server/countdown_client.py
   scripts/action_server/fibonacci_server.py
   scripts/action_server/fibonacci_client.py
+  scripts/tf/fixed_tf_broadcaster.py
+  scripts/tf/turtle_tf_broadcaster.py
+  scripts/tf/turtle_tf_listener.py
+  scripts/tf/turtle_tf_listener2.py
+  scripts/tf/turtle_control.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
