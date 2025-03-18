@@ -1,0 +1,22 @@
+<launch>
+	<!-- xacro 优化模型文件 -->
+	<arg name="model" default="$(find mbot_description)/xacro/mbot_with_camera.xacro"/>
+	<arg name="gui" default="true" />
+	<arg name="rvizconfig" default="$(find mbot_description)/config/mbot_arbotix.rviz" />
+
+	<param name="robot_description" command="$(find xacro)/xacro $(arg model)" />
+
+	<node name="arbotix" pkg="arbotix_python" type="arbotix_driver" output="screen">
+        <rosparam file="$(find mbot_description)/config/fake_mbot_arbotix.yaml" command="load" />
+        <param name="sim" value="true"/>
+    </node>
+
+    <!-- 显示运动控制插件 -->
+    <node if="$(arg gui)" name="joint_state_publisher" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" />
+	<node unless="$(arg gui)" name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+	<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+  
+    <!-- 运行rviz可视化界面 -->
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+
+</launch>
