@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: anno_description
+    relative_path: urdf/anno.urdf
+    xacro_args: ""
+  SRDF:
+    relative_path: config/anno.srdf
+  CONFIG:
+    author_name: l898974766
+    author_email: l898974766@outlook.com
+    generated_timestamp: 1742525241
