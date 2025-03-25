@@ -1,0 +1,29 @@
+<launch>
+ <include file="$(find probot_anno_moveit_config)/launch/move_group2.launch">
+  <arg name="publish_monitored_planning_scene" value="true" />
+  <arg name="fake_execution" value="false"/>
+  <arg name="allow_trajectory_execution" value="true"/>
+ </include>
+
+  <arg name="use_gui" default="false" />
+
+   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
+  <include file="$(find probot_anno_moveit_config)/launch/planning_context.launch">
+    <arg name="load_robot_description" value="true"/>
+  </include>
+
+ <!-- The visualization component of MoveIt! -->
+ <include file="$(find probot_anno_moveit_config)/launch/moveit_rviz.launch">
+  <arg name="config" value="true" />
+ </include>
+
+  <!-- We do not have a robot connected, so publish fake joint states -->
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+    <param name="/use_gui" value="false"/> 
+    <rosparam param="/source_list">[/probot_anno/joint_states]</rosparam>
+  </node>
+
+   <!-- Given the published joint states, publish tf for the robot links -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
+
+</launch>
