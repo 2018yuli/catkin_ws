@@ -1,0 +1,12 @@
+<package>
+  <description brief="pipermit">
+
+     pipermit
+
+  </description>
+  <author>noetic</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/pipermit</url>
+
+</package>
