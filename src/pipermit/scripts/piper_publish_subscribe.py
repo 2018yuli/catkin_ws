@@ -30,6 +30,7 @@ class PublishSubscribeManager:
         # 初始化Publisher
         self.joint_pub = rospy.Publisher('joint_states_single', JointState, queue_size=1)
         self.arm_status_pub = rospy.Publisher('arm_status', PiperStatusMsg, queue_size=1)
+        # self.arm_joint_status_rviz = rospy.Publisher('joint_status', JointState, queue_size=1)
         self.end_pose_pub = rospy.Publisher('end_pose', PoseStamped, queue_size=1)
         self.end_pose_euler_pub = rospy.Publisher('end_pose_euler', PiperEulerPose, queue_size=1)
 
@@ -107,6 +108,7 @@ class PublishSubscribeManager:
         self.joint_states.velocity = [vel_0,vel_1,vel_2,vel_3,vel_4,vel_5, 0.0]
         self.joint_states.effort = [eff_0,eff_1,eff_2,eff_3,eff_4,eff_5,eff_6]
         self.joint_pub.publish(self.joint_states)
+        # self.arm_joint_status_rviz.publish(self.joint_states)
 
     def publish_arm_end_pose(self):
         end_data = self.node.piper.GetArmEndPoseMsgs().end_pose

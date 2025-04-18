@@ -7,7 +7,8 @@ piper_ros_node.py: C_PiperRosNode类放在这里
 import time
 import rospy
 import threading
-from piper_sdk import C_PiperInterface
+from piper_sdk import C_PiperInterface, C_PiperInterface_V2
+import numpy as np
 
 class C_PiperRosNode:
     """机械臂ros节点核心类"""
@@ -17,11 +18,14 @@ class C_PiperRosNode:
         :param pub_sub_manager: PublishSubscribeManager实例
         """
         self.param_config = param_config
+        self.factor = 1000 * 180 / np.pi
         self._enable_flag = False  # 是否使能
         self.pub_sub_manager = pub_sub_manager
 
         # 创建 Piper SDK 接口对象
         self.piper = C_PiperInterface(can_name=self.param_config.can_port)
+        # 调用 Python 反射替换协议版本
+        self.piper._C_PiperInterface__parser = C_PiperInterface_V2()
         self.piper.ConnectPort()
         # 默认初始动作
         self.piper.MotionCtrl_2(0x01, 0x01, 30, 0)
@@ -111,8 +115,7 @@ class C_PiperRosNode:
         if not self.GetEnableFlag():
             return
         # 将关节 rad -> 0.001deg
-        import numpy as np
-        factor = 1000 * 180 / np.pi
+        factor = self.factor
         arr_pos = list(joint_data.position)
         joint_0 = round(arr_pos[0]*factor)
         joint_1 = round(arr_pos[1]*factor)
@@ -161,6 +164,29 @@ class C_PiperRosNode:
                 self.piper.GripperCtrl(abs(joint_6), gripper_effort, 0x01,0)
             else:
                 self.piper.GripperCtrl(abs(joint_6),1000,0x01,0)
+
+    # TODO 待验证
+    def gripper_callback(self, angle, effort):
+        if effort:
+            gripper_effort = effort
+            gripper_effort = max(0.5, min(gripper_effort,3))
+            gripper_effort = round(gripper_effort*1000)
+            self.piper.GripperCtrl(angle, gripper_effort, 0x01,0)
+        else:
+            self.piper.GripperCtrl(angle,1000,0x01,0)
+
+    # TODO 待验证
+    def action_callback(self, jointIdx, pos, vel):
+        if not self.GetEnableFlag():
+            return
+        # 将关节 rad -> 0.001deg
+        factor = self.factor
+        a_pos = pos * factor
+        
+        self.piper.MotionCtrl_2(0x01, 0x04, 0, 0xAD)
+        # 电机序号，位置，速度，kd,kp,目标力矩
+        self.piper.JointMitCtrl(jointIdx + 1, a_pos , vel, 10, 0.8, 0)
+
 
     def enable_callback(self, enable_flag):
         rospy.loginfo("Received enable flag:")

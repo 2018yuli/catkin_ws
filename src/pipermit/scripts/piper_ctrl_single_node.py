@@ -7,6 +7,7 @@ from piper_param_config import PiperParamConfig
 from piper_publish_subscribe import PublishSubscribeManager
 from piper_services import PiperServices
 from piper_ros_node import C_PiperRosNode
+from piper_action import PiperActions
 
 if __name__ == '__main__':
     try:
@@ -27,6 +28,10 @@ if __name__ == '__main__':
 
         # 创建Service
         piper_services = PiperServices(piper_sdk)
+
+        # 开启 rviz 控制
+        if param_config.rviz_ctrl_flag:
+            piper_actions = PiperActions(piper_sdk)
 
         # 最后开始执行发布循环
         piper_sdk.Pubilsh()
